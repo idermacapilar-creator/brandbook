@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galería HERO</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Helvetica Neue', sans-serif;
+      overflow: hidden;
+      background: black;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 1rem;
+    }
+
+    .icon-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1100;
+    }
+
+    .menu-icon,
+    .close-icon {
+      font-size: 1.8rem;
+      color: white;
+      cursor: pointer;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      font-weight: 100;
+      filter: brightness(90%) contrast(80%);
+      opacity: 1;
+    }
+
+    .close-icon {
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+    .nav.open ~ .icon-toggle .menu-icon {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.9);
+    }
+
+    .nav.open ~ .icon-toggle .close-icon {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      height: 100vh;
+      width: 250px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      transition: right 0.4s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .nav.open {
+      right: 0;
+    }
+
+    .nav ul {
+      list-style: none;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.5s ease;
+    }
+
+    .nav.open ul {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .nav ul li {
+      margin: 20px 0;
+    }
+
+    .nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.5rem;
+      transition: color 0.3s ease;
+    }
+
+    .nav ul li a:hover {
+      color: #f39c12;
+    }
+
+    .hero-gallery {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+    }
+
+    .slide {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+
+    .slide.active {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="icon-toggle">
+      <i class="fa-solid fa-bars-staggered menu-icon" id="menu-toggle"></i>
+      <i class="fa-solid fa-xmark close-icon" id="close-toggle"></i>
+    </div>
+
+    <nav class="nav" id="nav">
+      <ul>
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#">Galería</a></li>
+        <li><a href="#">Nosotros</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero-gallery" id="hero-gallery">
+      <div class="slide active" style="background-image: url('images/hero1.jpg')"></div>
+      <div class="slide" style="background-image: url('images/hero2.jpg')"></div>
+      <div class="slide" style="background-image: url('images/hero3.jpg')"></div>
+    </div>
+  </main>
+
+  <script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const closeToggle = document.getElementById('close-toggle');
+    const nav = document.getElementById('nav');
+
+    // Menú toggle
+    menuToggle.addEventListener('click', () => {
+      nav.classList.add('open');
+    });
+
+    closeToggle.addEventListener('click', () => {
+      nav.classList.remove('open');
+    });
+
+    // Slider manual
+    const slides = document.querySelectorAll('.slide');
+    let current = 0;
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+      });
+    }
+
+    // Touch swipe
+    let startX = 0;
+    let endX = 0;
+
+    const gallery = document.getElementById('hero-gallery');
+
+    gallery.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    });
+
+    gallery.addEventListener('touchend', (e) => {
+      endX = e.changedTouches[0].clientX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      const threshold = 50;
+      if (endX < startX - threshold) {
+        current = (current + 1) % slides.length;
+        showSlide(current);
+      } else if (endX > startX + threshold) {
+        current = (current - 1 + slides.length) % slides.length;
+        showSlide(current);
+      }
+    }
+
+    // Teclado ← →
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') {
+        current = (current + 1) % slides.length;
+        showSlide(current);
+      } else if (e.key === 'ArrowLeft') {
+        current = (current - 1 + slides.length) % slides.length;
+        showSlide(current);
+      }
+    });
+  </script>
+</body>
+</html>

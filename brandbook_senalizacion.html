@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELEMENTOS - Brandbook IDERMA</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flaticon/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow-x: hidden;
+        }
+
+        /* Preloader */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #163559 0%, #FFEECE 100%, #C4AC66 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: relative;
+        }
+
+        .loader::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-top: 2px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Background */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('images/caratula.jpg') center/cover no-repeat;
+            z-index: -2;
+        }
+
+        .background::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 40px;
+            background: rgba(255, 255, 255, 0);
+            backdrop-filter: blur(0px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: -1px;
+        }
+		.logo span {
+            font-size: 28px;
+            font-weight: 100;
+        }
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(90deg);
+        }
+
+        /* Menu Dropdown */
+        .menu-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 20px 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .menu-item {
+            display: block;
+            padding: 12px 25px;
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-left-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        /* Main Content */
+        .main {
+            padding: 120px 40px 60px;
+            min-height: 100vh;
+        }
+
+        .gallery-title {
+            text-align: center;
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 100;
+            margin-bottom: 60px;
+            letter-spacing: 22px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease 0.5s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Gallery Grid */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .gallery-item:nth-child(1) { animation-delay: 0.1s; }
+        .gallery-item:nth-child(2) { animation-delay: 0.2s; }
+        .gallery-item:nth-child(3) { animation-delay: 0.3s; }
+        .gallery-item:nth-child(4) { animation-delay: 0.4s; }
+        .gallery-item:nth-child(5) { animation-delay: 0.5s; }
+        .gallery-item:nth-child(6) { animation-delay: 0.6s; }
+        .gallery-item:nth-child(7) { animation-delay: 0.7s; }
+        .gallery-item:nth-child(8) { animation-delay: 0.8s; }
+        .gallery-item:nth-child(9) { animation-delay: 0.9s; }
+
+        .gallery-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.4s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay i {
+            color: #ffffff;
+            font-size: 24px;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay i {
+            transform: scale(1);
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            backdrop-filter: blur(0px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            padding: 20px;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 15px;
+            overflow: hidden;
+            transform: scale(0.8) rotateX(10deg);
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: #ffffff;
+            opacity: 0;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1) rotateX(0deg);
+            opacity: 1;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-image.changing {
+            opacity: 0.3;
+        }
+
+        .modal-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            color: #333;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .modal.active .modal-nav {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-nav:hover {
+            background: #ffffff;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .modal-nav.prev {
+            left: 20px;
+        }
+
+        .modal-nav.next {
+            right: 20px;
+        }
+
+        .modal-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .modal-btn:hover {
+            background: #ffffff;
+            transform: scale(1.1);
+        }
+
+        .modal-description {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: #ffffff;
+            padding: 40px 30px 20px;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+        }
+
+        .modal-description.visible {
+            transform: translateY(0);
+        }
+
+        .modal-description h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .modal-description p {
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .menu-dropdown {
+                right: 20px;
+            }
+
+            .main {
+                padding: 100px 20px 40px;
+            }
+
+            .gallery-title {
+                font-size: 36px;
+                margin-bottom: 40px;
+            }
+
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            .modal-controls {
+                top: 15px;
+                right: 15px;
+            }
+
+            .modal-nav {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .modal-nav.prev {
+                left: 15px;
+            }
+
+            .modal-nav.next {
+                right: 15px;
+            }
+
+            .modal-description {
+                padding: 30px 20px 15px;
+            }
+
+            .modal-description h3 {
+                font-size: 20px;
+            }
+
+            .modal-description p {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Background -->
+    <div class="background"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <a href="#" class="logo">Brandbook<span>IDERMA</span></a>
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <nav class="menu-dropdown" id="menuDropdown">
+            <a href="#" class="menu-item"><i class="fas fa-home"></i>&nbsp;&nbsp;Inicio</a>
+            <a href="brandbook_sectores.html" class="menu-item"><i class="fas fa-images"></i>&nbsp;&nbsp;Galería</a>
+            <a href="#" class="menu-item"><i class="fas fa-user"></i>&nbsp;&nbsp;Acerca de</a>
+            <a href="#" class="menu-item"><i class="fas fa-envelope"></i>&nbsp;&nbsp;Contacto</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <h1 class="gallery-title">ELEMENTS</h1>
+        
+        <div class="gallery" id="gallery">
+            <!-- Gallery items will be generated by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <img src="" alt="" class="modal-image" id="modalImage">
+            <div class="modal-controls">
+                <button class="modal-btn" id="expandBtn" title="Ver en pantalla completa">
+                    <i class="fas fa-expand"></i>
+                </button>
+                <button class="modal-btn" id="infoBtn" title="Mostrar descripción">
+                    <i class="fas fa-info"></i>
+                </button>
+                <button class="modal-btn" id="closeBtn" title="Cerrar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <button class="modal-nav prev" id="prevBtn" title="Imagen anterior">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="modal-nav next" id="nextBtn" title="Imagen siguiente">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <div class="modal-description" id="modalDescription">
+                <h3 id="modalTitle"></h3>
+                <p id="modalText"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gallery data
+        const galleryData = [
+            {
+                thumb: 'images/cover.jpg',
+                full: 'images/caratula-brandbook.jpg',
+                title: 'Belleza que empodera',
+                description: 'La representación de la gráfica para publicidad y branding estará siempre unida a la percepción aspiracional de la belleza como empoderamiento.'
+            },
+            {
+                thumb: 'images/cita1.png',
+                full: 'images/p.1.jpg',
+                title: 'Zaha Hadid',
+                description: 'La arquitectura y arte de Zaha Hadid se presentan como la principal influencia artística de Iderma Capilar, tanto en la concepción misma de la marca como en cada elemento gráfico y decorativo presentes.'
+            },
+            {
+                thumb: 'images/intro.png',
+                full: 'images/presentacion.png',
+                title: 'Una breve presentación ',
+                description: 'Prólogo del uso del presente manual como un compendio de todas las ideas relacionadas a la construcción de la marca.'
+            },
+            {
+                thumb: 'images/guidelines_title.png',
+                full: 'images/guidelines_text.png',
+                title: 'Lineamientos',
+                description: 'Estos son los lineamientos para el uso correcto de la gráfica asociada a la marca.'
+            },
+            {
+                thumb: 'images/definicion.png',
+                full: 'images/definicion_text.png',
+                title: 'Concepto',
+                description: 'Lo que significa el isotipo representativo de Iderma Capilar.'
+            },
+            {
+                thumb: 'images/glosario.png',
+                full: 'images/glosario_text.png',
+                title: 'Glosario del contenido',
+                description: 'Lista de los títulos desarrollados en este Brandbook.'
+            },
+            {
+                thumb: 'images/logotipo.png',
+                full: 'images/logotipo_text.png',
+                title: 'Bosque Misterioso',
+                description: 'Un sendero serpenteante se adentra en las profundidades del bosque neblinoso.'
+            },
+            {
+                thumb: 'images/influencia.png',
+                full: 'images/influencia_text.png',
+                title: 'Puesta de Sol',
+                description: 'El cielo se tiñe de colores vibrantes mientras el sol se despide del día.'
+            },
+            {
+                thumb: 'images/elemento.png',
+                full: 'images/p.6.jpg',
+                title: 'Montaña Solitaria',
+                description: 'Una imponente montaña se alza solitaria contra el cielo azul, guardiana silenciosa del paisaje.'
+            },
+			{
+                thumb: 'images/alfabeto.png',
+                full: 'images/p.6b.jpg',
+                title: 'Montaña Solitaria',
+                description: 'Una imponente montaña se alza solitaria contra el cielo azul, guardiana silenciosa del paisaje.'
+            },
+			{
+                thumb: 'images/area_seguridad.png',
+                full: 'images/p.7.jpg',
+                title: 'Montaña Solitaria',
+                description: 'Una imponente montaña se alza solitaria contra el cielo azul, guardiana silenciosa del paisaje.'
+            },
+			{
+                thumb: 'images/piso20.png',
+                full: 'images/area-entrada.jpg',
+                title: 'Montaña Solitaria',
+                description: 'Una imponente montaña se alza solitaria contra el cielo azul, guardiana silenciosa del paisaje.'
+            },
+			{
+                thumb: 'images/escalabilidad.png',
+                full: 'images/p.11.jpg',
+                title: 'Montaña Solitaria',
+                description: 'Una imponente montaña se alza solitaria contra el cielo azul, guardiana silenciosa del paisaje.'
+            },
+			{
+                thumb: 'images/referencias.png',
+                full: 'images/p.12.png',
+                title: 'Para servicios de Iderma Capilar',
+                description: 'Una imponente montaña se alza solitaria contra el cielo azul, guardiana silenciosa del paisaje.'
+            },
+			{
+                thumb: 'images/referencias.png',
+                full: 'images/p.13.png',
+                title: 'Para redes sociales',
+                description: 'Una imponente montaña se alza solitaria contra el cielo azul, guardiana silenciosa del paisaje.'
+            },
+			{
+                thumb: 'images/referencias.png',
+                full: 'images/p.14.png',
+                title: 'Montaña Solitaria',
+                description: 'Una imponente montaña se alza solitaria contra el cielo azul, guardiana silenciosa del paisaje.'
+            },
+			{
+                thumb: 'images/colores.png',
+                full: 'images/p.15.png',
+                title: 'Colores CMYK - Pantone',
+                description: '6 colores seleccionados para acompañar la gráfica impresa y web.'
+            },
+			{
+                thumb: 'images/colores.png',
+                full: 'images/p.16.png',
+                title: 'Colores para Gamas y Gradientes',
+                description: 'Opciones de gradientes para utilizar de fondo y en el diseño para gráfica impresa y web.'
+            },
+			{
+                thumb: 'images/font-outfit-caratula.png',
+                full: 'images/font-outfit.png',
+                title: 'Google Fotn Outfit',
+                description: 'Fuente general seleccionada para gráfica y web.'
+            },
+			{
+                thumb: 'images/font-rajdhani-caratula.png',
+                full: 'images/font-rajdhani.png',
+                title: 'Google Font Rajdhani',
+                description: 'Fuente a usarse en gráfica impresa y web, utilizada en el slogan del logotipo.'
+            },
+			{
+                thumb: 'images/font-italiana-caratula.png',
+                full: 'images/font-italiana.png',
+                title: 'Google Font Italiana',
+                description: 'Fuente seleccionada para usarse para la gráfica de Depilación.'
+            },
+			{
+                thumb: 'images/font-antonio-caratula.png',
+                full: 'images/font-antonio.png',
+                title: 'Google Font Antonio',
+                description: 'Seleccionada para usarse tanto en gráfica como para web en el servicio Capilar.'
+            },
+			{
+                thumb: 'images/font-chaman-caratula.png',
+                full: 'images/font-chaman.png',
+                title: 'Chaman Elegant',
+                description: 'Fuente ornamentada para ser utilizada en la gráfica correspondiente al servicio Capilar.'
+            },
+			{
+                thumb: 'images/aplicaciones-correctas.png',
+                full: 'images/p.21.jpg',
+                title: 'Chaman Elegant',
+                description: 'Fuente ornamentada para ser utilizada en la gráfica correspondiente al servicio Capilar.'
+            },
+			{
+                thumb: 'images/aplicaciones-marca-caratula.png',
+                full: 'images/p.21.jpg',
+                title: 'Chaman Elegant',
+                description: 'Fuente ornamentada para ser utilizada en la gráfica correspondiente al servicio Capilar.'
+            },
+			
+			
+			
+			
+        ];
+
+        // DOM Elements
+        const preloader = document.getElementById('preloader');
+        const menuToggle = document.getElementById('menuToggle');
+        const menuDropdown = document.getElementById('menuDropdown');
+        const gallery = document.getElementById('gallery');
+        const modal = document.getElementById('modal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalText = document.getElementById('modalText');
+        const modalDescription = document.getElementById('modalDescription');
+        const closeBtn = document.getElementById('closeBtn');
+        const expandBtn = document.getElementById('expandBtn');
+        const infoBtn = document.getElementById('infoBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // Current modal index
+        let currentModalIndex = 0;
+
+        // Preloader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                preloader.classList.add('hidden');
+            }, 1000);
+        });
+
+        // Menu Toggle
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuDropdown.classList.toggle('active');
+        });
+
+        document.addEventListener('click', () => {
+            menuDropdown.classList.remove('active');
+        });
+
+        menuDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Generate Gallery
+        function generateGallery() {
+            gallery.innerHTML = '';
+            galleryData.forEach((item, index) => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                galleryItem.innerHTML = `
+                    <img src="${item.thumb}" alt="${item.title}" loading="lazy">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                `;
+                
+                galleryItem.addEventListener('click', () => openModal(index));
+                gallery.appendChild(galleryItem);
+            });
+        }
+
+        // Modal Functions
+        function openModal(index) {
+            currentModalIndex = index;
+            updateModalContent(index);
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function updateModalContent(index) {
+            const item = galleryData[index];
+            
+            // Add changing class for smooth transition
+            modalImage.classList.add('changing');
+            
+            setTimeout(() => {
+                modalImage.src = item.full;
+                modalImage.alt = item.title;
+                modalTitle.textContent = item.title;
+                modalText.textContent = item.description;
+                
+                // Remove changing class
+                modalImage.classList.remove('changing');
+            }, 150);
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            modalDescription.classList.remove('visible');
+            document.body.style.overflow = 'auto';
+        }
+
+        function nextImage() {
+            currentModalIndex = (currentModalIndex + 1) % galleryData.length;
+            updateModalContent(currentModalIndex);
+        }
+
+        function prevImage() {
+            currentModalIndex = currentModalIndex === 0 ? galleryData.length - 1 : currentModalIndex - 1;
+            updateModalContent(currentModalIndex);
+        }
+
+        // Modal Event Listeners
+        closeBtn.addEventListener('click', closeModal);
+        prevBtn.addEventListener('click', prevImage);
+        nextBtn.addEventListener('click', nextImage);
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (modal.classList.contains('active')) {
+                switch(e.key) {
+                    case 'Escape':
+                        closeModal();
+                        break;
+                    case 'ArrowLeft':
+                        prevImage();
+                        break;
+                    case 'ArrowRight':
+                        nextImage();
+                        break;
+                }
+            }
+        });
+
+        expandBtn.addEventListener('click', () => {
+            if (modalImage.requestFullscreen) {
+                modalImage.requestFullscreen();
+            } else if (modalImage.webkitRequestFullscreen) {
+                modalImage.webkitRequestFullscreen();
+            } else if (modalImage.msRequestFullscreen) {
+                modalImage.msRequestFullscreen();
+            }
+        });
+
+        infoBtn.addEventListener('click', () => {
+            modalDescription.classList.toggle('visible');
+        });
+
+        // Initialize
+        generateGallery();
+
+        // Smooth scrolling for menu items
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                menuDropdown.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>

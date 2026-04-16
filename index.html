@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRANDBOOK IDERMA CAPILAR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flaticon/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            visibility: hidden;
+        }
+        
+        body.loaded {
+            visibility: visible;
+            animation: fadeIn 1.5s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            visibility: visible;
+        }
+        
+        .preloader.fade-out {
+            animation: fadeOut 0.8s ease forwards;
+        }
+        
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        .loading-text {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            font-size: 20px;
+			letter-spacing: 12px;
+            color: #D4AF37;
+            animation: blink 2s ease infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .logo {
+            width: 180px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span:first-child {
+            font-weight: 700;
+        }
+        
+        .logo span:last-child {
+            font-weight: 200;
+        }
+        
+        .logo span {
+            color: #aaa;
+            font-size: 24px;
+        }
+        
+        .menu-icon, .close-icon {
+            cursor: pointer;
+            transition: transform 0.5s ease;
+            width: 40px;
+            height: 40px;
+        }
+        
+        .menu-icon:hover, .close-icon:hover {
+            transform: rotate(90deg);
+        }
+        
+        .menu-icon svg, .close-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #fff;
+            stroke-width: 1;
+        }
+        
+        .close-icon {
+            display: none;
+        }
+        
+        .main-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 80px 40px;
+            transition: right 0.5s ease;
+            z-index: 999;
+        }
+        
+        .main-menu.active {
+            right: 0;
+        }
+        
+        .menu-items {
+            list-style: none;
+            margin-top: 50px;
+        }
+        
+        .menu-items li {
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            display: block;
+        }
+        
+        .menu-items a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 100;
+            font-size: 20px;
+            display: inline-block;
+            transition: transform 0.3s ease;
+            position: relative;
+            padding-bottom: 5px;
+        }
+        
+        .menu-items a:hover {
+            transform: translateX(20px);
+        }
+        
+        .menu-items a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -22%;
+            width: 100%;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.7), rgba(255, 215, 0, 1), rgba(255, 215, 0, 0.7), transparent);
+            transition: left 0.5s ease;
+            opacity: 0;
+        }
+        
+        .menu-items a:hover::after {
+            left: 0;
+            opacity: 1;
+            transition-delay: 0.1s;
+        }
+        
+        .gallery {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .slide.active {
+            opacity: 1;
+        }
+        
+        .controls {
+            position: fixed;
+            bottom: 50px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 100;
+        }
+        
+        .carousel-indicators {
+            display: flex;
+            gap: 15px;
+            list-style: none;
+        }
+        
+        .carousel-indicators li {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            position: relative;
+        }
+        
+        .carousel-indicators li:hover {
+            transform: scale(1.2);
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .carousel-indicators li.active {
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .carousel-indicators li span {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-size: 12px;
+            white-space: nowrap;
+            color: rgba(255, 255, 255, 0.8);
+            pointer-events: none;
+        }
+        
+        .carousel-indicators li:hover span {
+            opacity: 1;
+        }
+        
+        .pause-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 100;
+        }
+        
+        .pause-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: #fff;
+            stroke-width: 1;
+            fill: none;
+        }
+        
+        .play-btn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 100;
+        }
+        
+        .play-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: #fff;
+            stroke-width: 1;
+            fill: none;
+        }
+        
+        @media screen and (max-width: 768px) {
+            .logo span {
+                font-size: 20px;
+            }
+            
+            .main-menu {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .menu-items a {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="preloader">
+        <div class="loading-text">connecting interface</div>
+    </div>
+    
+    <header>
+        <div class="logo">
+            <span>Brandbook</span><span>IDERMA</span>
+        </div>
+        <div class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 6H21" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 12H21" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 18H21" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <div class="close-icon">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6L6 18" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6 6L18 18" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+    </header>
+
+    <div class="main-menu">
+        <ul class="menu-items">
+            <li><a href="#">Inicio</a></li>
+            <li><a href="referencias_redes.html">Referencias Redes</a></li>
+            <li><a href="uniformes.html">Propuesta uniformes</a></li>
+            <li><a href="carteleria.html">Cartelería</a></li>
+            <li><a href="#">Web</a></li>
+        </ul>
+    </div>
+
+    <div class="gallery">
+        <!-- Las imágenes se cargarán dinámicamente desde JavaScript -->
+    </div>
+
+    <div class="controls">
+        <ul class="carousel-indicators">
+            <!-- Los indicadores se generan dinámicamente desde JavaScript -->
+        </ul>
+    </div>
+
+    <button class="pause-btn">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 4H6V20H10V4Z" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18 4H14V20H18V4Z" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+    <button class="play-btn">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 3L19 12L5 21V3Z" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+
+    <script>
+        // Asegurar que el preloader esté visible inmediatamente
+        window.addEventListener('load', function() {
+            // Mostrar preloader durante 3 segundos
+            setTimeout(function() {
+                const preloader = document.querySelector('.preloader');
+                preloader.classList.add('fade-out');
+                
+                // Remover preloader y mostrar contenido
+                setTimeout(function() {
+                    preloader.style.display = 'none';
+                    document.body.classList.add('loaded');
+                    initGallery();
+                }, 800);
+            }, 3000);
+            
+            function initGallery() {
+                // Imágenes para la galería (se pueden reemplazar con las URL deseadas)
+                const images = [
+                { src: "images/caratula-brandbook.jpg", title: "Cover" },
+                { src: "images/p.1.jpg", title: "Lema" },
+				{ src: "images/presentacion.png", title: "Presentación" },
+				{ src: "images/guidelines_title.png", title: "Guidelines" },
+				{ src: "images/guidelines_text.png", title: "Guidelines" },
+				{ src: "images/definicion.png", title: "Definición" },
+				{ src: "images/definicion_text.png", title: "Definición" },
+				{ src: "images/p.3.jpg", title: "Glosario" },
+                { src: "images/p.4.jpg", title: "Logotipo" },
+                { src: "images/influencia.jpg", title: "Influencia" },
+				{ src: "images/p.6.jpg", title: "Elemento" },
+                { src: "images/alfabeto.jpg", title: "Alfabeto" },
+				{ src: "images/area1.jpg", title: "Área" },
+                
+                { src: "images/area-entrada.jpg", title: "Área Entrada" },
+				{ src: "images/p.10.jpg", title: "Escalabilidad" },
+                { src: "images/p.11.jpg", title: "Tamaños" },
+                { src: "images/p.12.jpg", title: "Referencias" },
+                { src: "images/p.13.jpg", title: "Colores" },
+				{ src: "images/colores.jpg", title: "Colores" },
+				{ src: "images/p.15.jpg", title: "Colores" },
+				{ src: "images/p.12-frase.jpg", title: "Lema" },
+                { src: "images/fonts1.jpg", title: "Fonts" },
+                { src: "images/fonts2.jpg", title: "Fonts" },
+                { src: "images/fonts3.jpg", title: "Fonts" },
+				{ src: "images/p.19.jpg", title: "Aplic. Correctas" },
+                { src: "images/p.20.jpg", title: "Aplic. Correctas" },
+                { src: "images/p.21.jpg", title: "Aplic. Correctas" },
+				{ src: "images/incorrectas.jpg", title: "Ap. Incorrectas" },
+                { src: "images/p.23.jpg", title: "Ap. Incorrectas" },
+                { src: "images/p.24.jpg", title: "Expresión" },
+				{ src: "images/p.25.jpg", title: "Expresión" }
+                ];
+
+                const gallery = document.querySelector('.gallery');
+                const indicators = document.querySelector('.carousel-indicators');
+                const pauseBtn = document.querySelector('.pause-btn');
+                const playBtn = document.querySelector('.play-btn');
+                const menuIcon = document.querySelector('.menu-icon');
+                const closeIcon = document.querySelector('.close-icon');
+                const mainMenu = document.querySelector('.main-menu');
+
+                let currentSlide = 0;
+                let isPlaying = true;
+                let slideInterval;
+
+                // Cargar imágenes
+                images.forEach((image, index) => {
+                    const slide = document.createElement('div');
+                    slide.classList.add('slide');
+                    slide.style.backgroundImage = `url(${image.src})`;
+                    if (index === 0) slide.classList.add('active');
+                    gallery.appendChild(slide);
+
+                    // Crear indicadores
+                    const indicator = document.createElement('li');
+                    if (index === 0) indicator.classList.add('active');
+                    const indicatorText = document.createElement('span');
+                    indicatorText.textContent = image.title;
+                    indicator.appendChild(indicatorText);
+                    indicator.addEventListener('click', () => {
+                        goToSlide(index);
+                    });
+                    indicators.appendChild(indicator);
+                });
+
+                // Función para cambiar de slide
+                function nextSlide() {
+                    const slides = document.querySelectorAll('.slide');
+                    const indicatorsList = document.querySelectorAll('.carousel-indicators li');
+                    
+                    slides[currentSlide].classList.remove('active');
+                    indicatorsList[currentSlide].classList.remove('active');
+                    
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    
+                    slides[currentSlide].classList.add('active');
+                    indicatorsList[currentSlide].classList.add('active');
+                }
+
+                // Función para ir a un slide específico
+                function goToSlide(index) {
+                    const slides = document.querySelectorAll('.slide');
+                    const indicatorsList = document.querySelectorAll('.carousel-indicators li');
+                    
+                    slides[currentSlide].classList.remove('active');
+                    indicatorsList[currentSlide].classList.remove('active');
+                    
+                    currentSlide = index;
+                    
+                    slides[currentSlide].classList.add('active');
+                    indicatorsList[currentSlide].classList.add('active');
+                }
+
+                // Iniciar el carrusel
+                function startSlideShow() {
+                    if (isPlaying) return;
+                    
+                    pauseBtn.style.display = 'block';
+                    playBtn.style.display = 'none';
+                    isPlaying = true;
+                }
+
+                // Detener el carrusel
+                function pauseSlideShow() {
+                    if (!isPlaying) return;
+                    clearInterval(slideInterval);
+                    pauseBtn.style.display = 'none';
+                    playBtn.style.display = 'block';
+                    isPlaying = false;
+                }
+
+                // Iniciar el carrusel automáticamente
+                
+
+                // Event listeners
+                pauseBtn.addEventListener('click', pauseSlideShow);
+                playBtn.addEventListener('click', startSlideShow);
+
+                // Pausar al hacer hover sobre la galería
+                gallery.addEventListener('mouseenter', pauseSlideShow);
+                gallery.addEventListener('mouseleave', startSlideShow);
+
+                // Control con la rueda del mouse
+                document.addEventListener('wheel', function(event) {
+                    if (event.deltaY > 0) {
+                        // Scroll hacia abajo
+                        nextSlide();
+                    } else {
+                        // Scroll hacia arriba
+                        const slides = document.querySelectorAll('.slide');
+                        const indicatorsList = document.querySelectorAll('.carousel-indicators li');
+                        
+                        slides[currentSlide].classList.remove('active');
+                        indicatorsList[currentSlide].classList.remove('active');
+                        
+                        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                        
+                        slides[currentSlide].classList.add('active');
+                        indicatorsList[currentSlide].classList.add('active');
+                    }
+                    
+                    // Pausar el carrusel automático al usar la rueda
+                    pauseSlideShow();
+                    
+                    // Reiniciar el carrusel después de un tiempo
+                    
+                });
+
+                // Menú
+                menuIcon.addEventListener('click', function() {
+                    mainMenu.classList.add('active');
+                    menuIcon.style.display = 'none';
+                    closeIcon.style.display = 'block';
+                });
+
+                closeIcon.addEventListener('click', function() {
+                    mainMenu.classList.remove('active');
+                    menuIcon.style.display = 'block';
+                    closeIcon.style.display = 'none';
+                });
+
+                // Inicializar
+                pauseBtn.style.display = 'block';
+                playBtn.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
