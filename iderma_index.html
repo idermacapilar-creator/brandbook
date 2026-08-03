@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IDERMA CAPILAR - Guía de marca</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&family=Outfit:wght@100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #816c3f;
+    --gold: #e7dcc0;
+    --gold-light: #d9d6d1;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--navy);
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* ── CANVAS DNA ── */
+  #dna {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+  }
+
+  /* ── FONDO GRADIENTE RADIAL central ── */
+  .radial {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background:
+      radial-gradient(ellipse 100% 95% at 50% 50%,
+        rgba(255, 245, 225, 1.0) 10%,
+        rgba(128, 107, 62, 1.0) 70%);
+    pointer-events: none;
+  }
+
+  /* ── VIGNETTE ── */
+  .vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    background:
+      radial-gradient(ellipse 100% 100% at 50% 50%,
+        transparent 40%,
+        rgba(4, 9, 18, 0.85) 100%);
+    pointer-events: none;
+  }
+
+  /* ── CONTENIDO ── */
+  .stage {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 56px;
+  }
+
+  /* ── LOGO placeholder ── */
+  .logo-wrap {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-18px);
+    animation: fadeUp 1.1s cubic-bezier(.22,1,.36,1) 0.3s forwards;
+  }
+
+  .logo-wrap img {
+    height: 72px;
+    width: auto;
+  }
+
+  /* Texto fallback visible mientras no hay logo */
+  .logo-text {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 38px;
+    letter-spacing: 10px;
+    color: #fff;
+    text-transform: uppercase;
+  }
+
+  .logo-sub {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 23px;
+    letter-spacing: 6px;
+    color: rgba(27,55,94,1.1);
+    text-transform: uppercase;
+    margin-top: 26px;
+  }
+   .logo-intro {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+
+    letter-spacing: 1px;
+    color: rgba(27,55,94,1.1);
+    
+    margin-top: 16px;
+  }
+
+  /* ── BOTONES ── */
+  .btn-row {
+    display: flex;
+    gap: 20px;
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp 1.1s cubic-bezier(.22,1,.36,1) 0.75s forwards;
+  }
+
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 36px;
+    height: 52px;
+    border-radius: 2px;
+    text-decoration: none;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .btn:hover { transform: translateY(-2px); }
+  .btn:hover::before { opacity: 1; }
+  .btn:active { transform: translateY(0); }
+
+  /* Botón primario: relleno dorado */
+  .btn-primary {
+    background: linear-gradient(135deg, #c9a84c, #e8cc78, #c9a84c);
+    background-size: 200% 200%;
+    color: #060e1c;
+    box-shadow: 0 0 0 rgba(201,168,76,0);
+    animation: fadeUp 1.1s cubic-bezier(.22,1,.36,1) 0.75s forwards,
+               shimmer 4s ease-in-out 2s infinite;
+  }
+
+  .btn-primary::before {
+    background: rgba(255,255,255,0.12);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 8px 32px rgba(201,168,76,0.35);
+  }
+
+  /* Botón secundario: borde dorado */
+  .btn-secondary {
+    background: transparent;
+    color: rgba(25,54,94,0.95);
+    border: 1px solid rgba(201,168,76,0.45);
+    box-shadow: inset 0 0 0 rgba(201,168,76,0);
+  }
+
+  .btn-secondary::before {
+    background: rgba(201,168,76,0.07);
+  }
+
+  .btn-secondary:hover {
+    border-color: rgba(201,168,76,0.85);
+    color: #fff;
+    box-shadow: 0 8px 32px rgba(201,168,76,0.12);
+  }
+
+  /* icono flecha */
+  .btn svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+  }
+
+  .btn:hover svg { transform: translateX(3px); }
+
+  /* ── LÍNEA decorativa bajo logo ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.55s forwards;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.5));
+  }
+  .divider::after {
+    background: linear-gradient(90deg, rgba(201,168,76,0.5), transparent);
+  }
+  .divider-diamond {
+    width: 5px; height: 5px;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  /* ── KEYFRAMES ── */
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  @keyframes shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 560px) {
+	.logo-wrap { width: 333px;}
+    .btn-row { flex-direction: column; gap: 14px; }
+    .btn { width: 290px; justify-content: center; }
+    .logo-text { font-size: 26px; letter-spacing: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ADN animado -->
+<canvas id="dna"></canvas>
+<div class="radial"></div>
+<div class="vignette"></div>
+
+<!-- Contenido central -->
+<div class="stage">
+
+  <!-- LOGO — reemplaza el bloque .logo-text/.logo-sub por <img src="tu-logo.png"> -->
+  <div class="logo-wrap">
+    <div class="logo-text"><img src="images/favicon-iderma-8.png" alt="Logotipo Iderma Capilar"></div>
+    <div class="logo-sub">SISTEMA DE IDENTIDAD VISUAL</div>
+	<div class="logo-intro">La identidad visual de IDERMA CAPILAR evoluciona continuamente. <br/>Explora el sistema gráfico vigente o consulta el archivo histórico de la marca como referencia.</div>
+  </div>
+
+  <!-- Divisor -->
+  <div class="divider" style="margin-top:-28px;">
+    <div class="divider-diamond"></div>
+  </div>
+
+  <!-- Botones -->
+  <div class="btn-row">
+
+    <a class="btn btn-primary"
+       href="https://idermacapilar-creator.github.io/brandbook/brandbook_sectores.html"
+       target="_blank" rel="noopener">
+      IDENTIDAD VISUAL actual
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+
+    <a class="btn btn-secondary"
+       href="https://drive.google.com/drive/folders/1sS2eVs3Zy6deWk4WlVir_qf1yB8JX-6U?usp=drive_link"
+       target="_blank" rel="noopener">
+      Archivo Histórico de Marca
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+
+  </div>
+</div>
+
+<!-- ── ANIMACIÓN ADN ── -->
+<script>
+(function () {
+  const canvas = document.getElementById('dna');
+  const ctx = canvas.getContext('2d');
+  let W, H, cx, cy;
+  let t = 0;
+
+  const GOLD   = 'rgba(201,168,76,';
+  const BLUE   = 'rgba(50,110,210,';
+  const WHITE  = 'rgba(255,255,255,';
+
+  /* Parámetros visuales */
+  const STRANDS   = 2;       // hebras del ADN
+  const SEGS      = 28;      // segmentos verticales
+  const AMP       = 0.18;    // amplitud lateral como fracción del ancho
+  const SPEED     = 0.0008;  // velocidad de oscilación
+  const BASE_OPA  = 0.11;    // opacidad base (muy sutil)
+
+  function resize () {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    cx = W / 2;
+    cy = H / 2;
+  }
+
+  /* Calcula posición X de una hebra en el segmento i */
+  function strandX (strand, i, time) {
+    const phase = strand === 0 ? 0 : Math.PI;
+    const yNorm = i / SEGS; // 0..1
+    return cx + Math.sin(yNorm * Math.PI * 3 + time + phase) * (W * AMP);
+  }
+
+  /* y de un segmento */
+  function segY (i) {
+    return (i / SEGS) * H;
+  }
+
+  function draw () {
+    ctx.clearRect(0, 0, W, H);
+    t += SPEED;
+
+    /* ── ESCALERA (rungs) entre las dos hebras ── */
+    for (let i = 0; i <= SEGS; i++) {
+      const y  = segY(i);
+      const x0 = strandX(0, i, t);
+      const x1 = strandX(1, i, t);
+
+      /* Distancia entre hebras para la opacidad */
+      const dist = Math.abs(x1 - x0);
+      const maxDist = W * AMP * 2;
+      const opa = BASE_OPA * (1 - dist / maxDist) * 0.9;
+
+      /* Línea horizontal (rung) */
+      ctx.beginPath();
+      ctx.moveTo(x0, y);
+      ctx.lineTo(x1, y);
+      ctx.strokeStyle = GOLD + (opa * 1.4) + ')';
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+
+      /* Nodo en intersección con cada hebra */
+      [x0, x1].forEach((nx, si) => {
+        ctx.beginPath();
+        ctx.arc(nx, y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = si === 0
+          ? GOLD  + (BASE_OPA * 2.2) + ')'
+          : BLUE  + (BASE_OPA * 2.2) + ')';
+        ctx.fill();
+      });
+    }
+
+    /* ── HEBRAS (curvas suavizadas) ── */
+    for (let strand = 0; strand < STRANDS; strand++) {
+      ctx.beginPath();
+      for (let i = 0; i <= SEGS; i++) {
+        const x = strandX(strand, i, t);
+        const y = segY(i);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      const color = strand === 0
+        ? GOLD + (BASE_OPA * 1.8) + ')'
+        : BLUE + (BASE_OPA * 1.8) + ')';
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+    }
+
+    /* ── PARTÍCULAS flotantes ── */
+    /* Usamos la posición del tiempo para 8 puntos de luz */
+    for (let p = 0; p < 8; p++) {
+      const phase  = (p / 8) * Math.PI * 2;
+      const yf     = ((t * 0.15 + p * 0.12) % 1.05) * H;
+      const strand = p % 2;
+      const segApprox = (yf / H) * SEGS;
+      const xf = strandX(strand, segApprox, t);
+      const opa2 = BASE_OPA * 1.6 * Math.abs(Math.sin(t * 3 + phase));
+      ctx.beginPath();
+      ctx.arc(xf, yf, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = GOLD + opa2 + ')';
+      ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  draw();
+})();
+</script>
+</body>
+</html>
